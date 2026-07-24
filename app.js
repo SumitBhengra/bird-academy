@@ -306,15 +306,22 @@ function startMiniGame() {
   scoreDisplay.innerText = gameScore;
   timeDisplay.innerText = timeLeft;
 
-  birdMoverInterval = setInterval(() => {
-    const maxX = window.innerWidth - 80;
-    const maxY = window.innerHeight - 200; 
-    const x = Math.max(0, Math.floor(Math.random() * maxX));
-    const y = Math.max(100, Math.floor(Math.random() * maxY));
+  // Helper function to keep the bird safely below the header text and buttons
+  function repositionBird() {
+    const maxX = window.innerWidth - 90;
+    const maxY = window.innerHeight - 100;
+    const minTop = 180; // Leaves the top 180px completely clear of text/icons
+    
+    const x = Math.max(20, Math.floor(Math.random() * maxX));
+    // Generates a random Y position strictly between minTop and maxY
+    const y = Math.floor(Math.random() * (maxY - minTop)) + minTop;
     
     birdTarget.style.left = `${x}px`;
     birdTarget.style.top = `${y}px`;
-  }, 800);
+  }
+
+  // Move the bird automatically every 800ms
+  birdMoverInterval = setInterval(repositionBird, 800);
 
   timerInterval = setInterval(() => {
     timeLeft--;
@@ -325,16 +332,12 @@ function startMiniGame() {
     }
   }, 1000);
 
+  // Move the bird instantly when tapped
   birdTarget.addEventListener("pointerdown", (event) => {
     playPopSound();
-
     gameScore++;
     scoreDisplay.innerText = gameScore;
-    
-    const maxX = window.innerWidth - 80;
-    const maxY = window.innerHeight - 200; 
-    birdTarget.style.left = `${Math.max(0, Math.floor(Math.random() * maxX))}px`;
-    birdTarget.style.top = `${Math.max(100, Math.floor(Math.random() * maxY))}px`;
+    repositionBird();
   });
 }
 
