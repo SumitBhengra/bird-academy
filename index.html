@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bird Academy</title>
+  <style>
+    /* Import a modern, rounded font from Google */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+/* Global Background & Mobile Lock */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+  color: #2d3436;
+  overflow: auto; /* Keeps page scrolling enabled */
+}
+
+
+/* Modern Input Field */
+input[type="text"] {
+  padding: 16px 20px;
+  margin: 15px 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 30px;
+  width: 85%;
+  max-width: 350px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  color: #2d3436;
+  text-align: center;
+  outline: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s, background 0.2s;
+}
+
+input[type="text"]:focus {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
+}
+/* Screen State & Fade Animations */
+/* Ensure screens can anchor absolute elements */
+.screen {
+  position: relative; /* Crucial for positioning the corner exit icon */
+  display: none; 
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Sleek Corner Exit Icon */
+.corner-exit-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  z-index: 100;
+  touch-action: manipulation;
+}
+
+/* Sleek Top-Left Home Icon */
+.corner-home-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  z-index: 100;
+  touch-action: manipulation;
+}
+
+.corner-home-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.08);
+}
+
+.corner-exit-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.08);
+}
+
+.screen.active {
+  display: flex;
+}
+/* Stop accidental zooming on rapid taps while keeping scrolling active */
+button, input[type="text"], #btn-quit-after-quiz {
+  touch-action: manipulation;
+}
+
+/* Lock tracking on the bird so fast tapping doesn't drag or zoom the screen */
+#bird-target {
+  touch-action: none; 
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Typography Polish */
+h1, h2 {
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #1e272e;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Glassmorphism Quiz Card */
+h2#question-text {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px); /* The frosted glass effect */
+  padding: 25px 20px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  width: 90%;
+  max-width: 400px;
+  font-size: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Modern Pill Buttons */
+button {
+  padding: 16px 24px;
+  margin: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); /* Purple gradient */
+  border: none;
+  border-radius: 30px; /* Fully rounded edges */
+  width: 90%;
+  max-width: 350px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+  transition: transform 0.1s, box-shadow 0.1s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The "Press" Animation */
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(108, 92, 231, 0.2);
+}
+
+/* Distinct Hint Button */
+#hint-btn {
+  background: linear-gradient(135deg, #fdcb6e, #ffeaa7);
+  color: #2d3436;
+  box-shadow: 0 4px 15px rgba(253, 203, 110, 0.3);
+  margin-top: 30px;
+}
+
+/* Pop-in Hint Drawer */
+.hint-box {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 15px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 350px;
+  border-radius: 16px;
+  display: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  font-weight: 600;
+}
+
+.hint-box.visible {
+  display: block;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* Ensure the exit text is fully interactive */
+#btn-quit-after-quiz {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  display: inline-block;
+  padding: 10px; /* Expands the invisible touch area for fingers */
+}
+#btn-quit-after-quiz:hover, #btn-quit-game:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+/* The New Bird Target */
+#bird-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 45px; 
+  width: 70px; 
+  height: 70px;
+  background: rgba(255, 255, 255, 0.3); /* Frosted bubble */
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+  </style>
+</head>
+<body>
+
+  <body>
+  <!-- LAYER 0: LOGIN SCREEN -->
+  <section id="login-screen" class="screen active">
+    <h1>Bird Academy</h1>
+    <h2>Enter your name to begin</h2>
+    <input type="text" id="player-name" placeholder="Your Name..." autocomplete="off">
+    <button id="start-game-btn">Start Game</button>
+  </section>
+  <!-- LAYER 0.5: WELCOME DASHBOARD -->
+  <section id="welcome-screen" class="screen">
+
+    <button class="corner-exit-btn" id="exit-welcome" title="Exit to Login">🚪</button>
+    <h1 id="welcome-text">Welcome!</h1>
+    <h2>What would you like to do today?</h2>
+    <button id="btn-choose-quiz">Start the Quiz</button>
+    <button id="btn-choose-game">Play the Tapping Game</button>
+  </section>
+
+  <!-- LAYER 1: QUIZ SCREEN -->
+  <section id="quiz-screen" class="screen">
+    <!-- Home button on the top-left -->
+    <button class="corner-home-btn" id="home-quiz" title="Back to Dashboard">🏠</button>
+    <h1>Bird Academy Quiz</h1>
+    <h2 id="question-text">Loading question...</h2>
+    <div id="options-container"></div>
+    <br>
+    <button id="hint-btn">Need a Hint?</button>
+    <div id="hint-drawer" class="hint-box">
+      <p id="hint-text"></p>
+      <!-- NEW: Image container for hints -->
+      <img id="hint-image" src="" alt="Hint Visual" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 12px; margin-top: 10px; display: none;">
+    </div>
+  </section>
+
+  <!-- LAYER 1.5: QUIZ COMPLETE BRIDGE -->
+  <section id="quiz-complete-screen" class="screen">
+    <button class="corner-home-btn" id="home-quiz-complete" title="Back to Dashboard">🏠</button>
+    <button class="corner-exit-btn" id="exit-quiz-complete" title="Exit to Login">🚪</button>
+    
+    <h2>Quiz Completed!</h2>
+    <p>You answered <span id="quiz-score-display">0</span> out of <span id="quiz-total-display">0</span> questions correctly!</p>
+    
+    <h3 id="quiz-encouragement-text" style="color: #6c5ce7; margin: 15px 0;"></h3>
+    
+    <p>Now what would you like to do?</p>
+    <button id="btn-start-game-after-quiz">Start the Tapping Game</button>
+    <button id="btn-play-quiz-again" style="background: linear-gradient(135deg, #a8ff78, #78ffd6); color: #2d3436; margin-top: 10px;">Play Quiz Again</button>
+  </section>
+
+  <!-- LAYER 2: MINI-GAME SCREEN -->
+  <section id="game-screen" class="screen">
+    <!-- Home button on the top-left -->
+    <button class="corner-home-btn" id="home-game" title="Back to Dashboard">🏠</button>
+    <!-- Moved safely to the top right corner away from tapping zone -->
+    <button class="corner-exit-btn" id="exit-game" title="Exit to Login">🚪</button>
+    
+    <h2>Tap the Bird!</h2>
+    <p>Time Left: <span id="time-display">15</span>s | Score: <span id="game-score">0</span></p>
+    <div id="bird-target">🐦</div>
+  </section>
+
+  <!-- LAYER 3: GAME OVER SCREEN -->
+  <section id="game-over-screen" class="screen">
+    <button class="corner-exit-btn" id="exit-gameover" title="Exit to Login">🚪</button>
+    <h2>Time's Up!</h2>
+    <p>Great job, <span id="display-player-name"></span>!</p>
+    <p>You answered the trivia and tapped <span id="final-score">0</span> birds!</p>
+    <button id="restart-btn">Play Again</button>
+  </section>
+
+  <!-- Connects to your JavaScript engine below -->
+  <script src="app.js"></script>
+</body>
+</html>
