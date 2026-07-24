@@ -416,24 +416,5 @@ exitGameOver.addEventListener("click", () => {
   loginScreen.classList.add("active");
 });
 
-// Quit Link During the Mini-Game: Clears timers and resets back to Login
-btnQuitGame.addEventListener("click", () => {
-  playPopSound();
-  
-  // 1. Stop active game background loops
-  clearInterval(birdMoverInterval);
-  clearInterval(timerInterval);
-  
-  // 2. Clear state and input field
-  gameState.currentQuestionIndex = 0;
-  gameState.score = 0;
-  gameState.playerName = "";
-  playerNameInput.value = "";
-  
-  // 3. Return to Login Screen
-  gameScreen.classList.remove("active");
-  loginScreen.classList.add("active");
-});
-
 // 7. KICK OFF THE APP
 renderQuiz();

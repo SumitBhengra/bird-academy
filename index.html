@@ -59,11 +59,12 @@ input[type="text"]:focus {
 /* Screen State & Fade Animations */
 /* Ensure screens can anchor absolute elements */
 .screen {
-  position: relative; /* Crucial for positioning the corner exit icon */
+  position: relative; /* Crucial for positioning the corner icons */
   display: none; 
   width: 100%;
   min-height: 100vh;
-  padding: 40px 20px;
+  /* Increased top padding to 80px so content always starts safely below the icons */
+  padding: 80px 20px 40px 20px; 
   box-sizing: border-box;
   text-align: center;
   flex-direction: column;
@@ -71,6 +72,16 @@ input[type="text"]:focus {
   justify-content: flex-start;
   overflow-y: auto;
   animation: fadeIn 0.4s ease-out forwards;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Keeps titles neatly contained in the center, away from corner buttons */
+.screen h1, .screen h2 {
+  max-width: 75%; 
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Sleek Corner Exit Icon */
