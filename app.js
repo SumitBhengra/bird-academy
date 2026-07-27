@@ -43,23 +43,101 @@ function playWrongSound() {
   oscillator.stop(audioCtx.currentTime + 0.2);
 }
 
-// 1. THE DATA BASE
 const birdQuizData = [
   {
-    question: "Which bird is known for its brilliant blue feathers and mimicking sounds?",
-    options: ["Blue Jay", "Kingfisher", "Peacock", "Indian Roller"],
-    correctAnswer: "Blue Jay",
-    hint: "It is highly aggressive near bird feeders and loves peanuts.",
-    hintImage: "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?w=400" // Example image URL
+    question: "Which vibrant Australian parrot features a bright blue head, green wings, and a red-orange beak and chest?",
+    options: ["Golden Pheasant", "Rainbow Lorikeet", "Atlantic Puffin", "Hoopoe"],
+    correctAnswer: "Rainbow Lorikeet",
+    hint: "It is famous for its multicolored plumage and lively personality.",
+    hintImage: ""
   },
   {
-    question: "Which unique bird can fly backward?",
-    options: ["Eagle", "Hummingbird", "Sparrow", "Parrot"],
-    correctAnswer: "Hummingbird",
-    hint: "Its wings beat up to 80 times per second!",
-    hintImage: "https://images.unsplash.com/photo-1555169062-013468b47631?w=400" // Example image URL
+    question: "Which striking gamebird is famous for its unmistakable golden crest and bright red body?",
+    options: ["Golden Pheasant", "Wild Turkey", "Himalayan Monal", "Common Pheasant"],
+    correctAnswer: "Golden Pheasant",
+    hint: "The males display an elaborate golden fan around their necks during courtship.",
+    hintImage: ""
+  },
+  {
+    question: "Which sacred, long-tailed bird of Mesoamerica features dazzling metallic green and red plumage?",
+    options: ["Resplendent Quetzal", "Quetzal", "Macaw", "Superb Bird-of-Paradise"],
+    correctAnswer: "Quetzal",
+    hint: "Ancient civilizations treasured its long, flowing tail feathers.",
+    hintImage: ""
+  },
+  {
+    question: "Which distinctive bird is known for its prominent crown-like crest of feathers, zebra-striped wings, and a long curved bill?",
+    options: ["Peacock", "Hoopoe", "Secretarybird", "Crowned Crane"],
+    correctAnswer: "Hoopoe",
+    hint: "It uses its slender bill to probe the ground for insects.",
+    hintImage: ""
+  },
+  {
+    question: "Which charming seabird, often nicknamed the 'clown of the sea', is famous for its colorful, parrot-like bill?",
+    options: ["Albatross", "Atlantic Puffin", "Penguin", "Pelican"],
+    correctAnswer: "Atlantic Puffin",
+    hint: "Its bill turns a brilliant bright orange during the summer breeding season.",
+    hintImage: ""
+  },
+  {
+    question: "Which majestic, ground-dwelling bird is famous for the male's massive, iridescent blue-and-green eyespot train?",
+    options: ["Turkey", "Peacock", "Pheasant", "Cassowary"],
+    correctAnswer: "Peacock",
+    hint: "It fans out its gorgeous tail feathers to attract mates.",
+    hintImage: ""
+  },
+  {
+    question: "Which North American songbird has brilliant crimson plumage and a distinct black face mask around its bill?",
+    options: ["Northern Cardinal", "Scarlet Tanager", "Red Crossbill", "Cedar Waxwing"],
+    correctAnswer: "Northern Cardinal",
+    hint: "Unlike many songbird species, both the males and females are strong singers.",
+    hintImage: ""
+  },
+  {
+    question: "Which massive scavenging bird of prey native to North America is one of the rarest birds in the world?",
+    options: ["Bald Eagle", "California Condor", "Andean Condor", "Vulture"],
+    correctAnswer: "California Condor",
+    hint: "It boasts an enormous wingspan and a bald head adapted for scavenging.",
+    hintImage: ""
+  },
+  {
+    question: "Which unique African raptor walks great distances across grasslands and has long, leg-like feathers that resemble quill pens?",
+    options: ["Secretarybird", "Bateleur", "Osprey", "Harpy Eagle"],
+    correctAnswer: "Secretarybird",
+    hint: "It hunts snakes on foot by stomping on them with powerful legs.",
+    hintImage: ""
+  },
+  {
+    question: "Which prehistoric-looking swamp bird stands completely still in wetlands and features a massive, clog-shaped bill?",
+    options: ["Marabou Stork", "Shoebill", "Grey Heron", "Great Blue Heron"],
+    correctAnswer: "Shoebill",
+    hint: "Its unique bill helps it catch fish and small aquatic prey in muddy waters.",
+    hintImage: ""
+  },
+  {
+    question: "Which iconic rainforest bird is recognized instantly by its enormous, brightly colored orange-and-black bill?",
+    options: ["Keel-billed Toucan", "Toco Toucan", "Hornbill", "Ara Macaw"],
+    correctAnswer: "Toco Toucan",
+    hint: "Despite its large size, its bill is surprisingly light because it is mostly hollow.",
+    hintImage: ""
+  },
+  {
+    question: "Which massive, flightless bird is the largest living bird on Earth and can outrun most predators?",
+    options: ["Emu", "Cassowary", "Ostrich", "Rhea"],
+    correctAnswer: "Ostrich",
+    hint: "It has large eyes that are actually bigger than its brain.",
+    hintImage: ""
+  },
+  {
+    question: "Which unmistakable water bird is known for its curved neck, pink plumage, and habit of standing on one leg?",
+    options: ["Roseate Spoonbill", "Flamingo", "Scarlet Ibis", "Cormorant"],
+    correctAnswer: "Flamingo",
+    hint: "Their vibrant color comes directly from the specialized pigments in their diet.",
+    hintImage: ""
   }
 ];
+
+
 
 // 2. THE APPLICATION STATE
 let gameState = {
