@@ -7,37 +7,27 @@
   <style>
     /* Import a modern, rounded font from Google */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
-
-/* Global Background & Mobile Lock */
 :root {
-  --bg-gradient: linear-gradient(135deg, #134e5e 0%, #71b280 100%); /* Deep rich forest-to-teal gradient */
-  --card-bg: rgba(255, 255, 255, 0.15); /* Frosted glass with more transparency */
-  --card-border: rgba(255, 255, 255, 0.3);
+  /* Playful, high-energy sunset-to-indigo gradient */
+  --bg-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
   --text-main: #ffffff;
   --text-muted: #e2e8f0;
-  --accent-purple: #6c5ce7;
-  --accent-glow: rgba(108, 92, 231, 0.4);
 }
 
-/* Global Background */
+/* Global Background & Mobile Lock */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
   background: var(--bg-gradient);
-  background-attachment: fixed; /* Keeps the gradient locked nicely when scrolling */
-  color: #1e272e; /* Dark readable text for elements outside glass cards if needed */
+  background-attachment: fixed;
+  color: #1e272e;
   min-height: 100vh;
+  overflow: auto;
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
-}
-    
-/* Prevent accidental text highlighting during fast tapping */
-body {
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* Internet Explorer/Edge */
-  user-select: none;         /* Standard */
 }
 
 /* Ensure students can still type and select text in the name input box */
@@ -48,14 +38,113 @@ input[type="text"] {
   user-select: text;
 }
 
-/* Glassmorphism Quiz Card & Welcome Screen Container */
-h2#question-text, .screen h1, .screen h2 {
+/* Modern Input Field */
+input[type="text"] {
+  padding: 16px 20px;
+  margin: 15px 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  width: 85%;
+  max-width: 350px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
   color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  outline: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  transition: box-shadow 0.2s, background 0.2s;
 }
 
+input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+input[type="text"]:focus {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.4);
+}
+
+/* Screen State & Fade Animations */
+.screen {
+  position: relative;
+  display: none; 
+  width: 100%;
+  min-height: 100vh;
+  padding: 80px 20px 40px 20px; 
+  box-sizing: border-box;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  animation: fadeIn 0.4s ease-out forwards;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.screen h1, .screen h2 {
+  max-width: 75%; 
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Sleek Corner Exit & Home Icons */
+.corner-exit-btn, .corner-home-btn {
+  position: absolute;
+  top: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  z-index: 100;
+  touch-action: manipulation;
+  color: #ffffff;
+}
+
+.corner-home-btn { left: 20px; }
+.corner-exit-btn { right: 20px; }
+
+.corner-home-btn:hover, .corner-exit-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.screen.active {
+  display: flex;
+}
+
+button, input[type="text"], #btn-quit-after-quiz {
+  touch-action: manipulation;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Typography Polish */
+h1, h2 {
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #ffffff;
+  text-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+
+/* Crisp, High-Contrast Glassmorphism Question Box */
 h2#question-text {
-  background: rgba(15, 23, 42, 0.5); /* Rich dark frosted glass for high contrast */
+  background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   padding: 25px 20px;
@@ -68,6 +157,141 @@ h2#question-text {
   border: 1px solid rgba(255, 255, 255, 0.25);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
+
+/* Modern Game-Like Buttons */
+button {
+  padding: 16px 24px;
+  margin: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #f59e0b, #ea580c); /* Vibrant warm orange-gold game gradient */
+  border: none;
+  border-radius: 30px;
+  width: 90%;
+  max-width: 350px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(234, 88, 12, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 10px 30px rgba(234, 88, 12, 0.6);
+}
+
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 15px rgba(234, 88, 12, 0.2);
+}
+
+/* Distinct Hint Button */
+#hint-btn {
+  background: linear-gradient(135deg, #38bdf8, #0284c7);
+  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.4);
+  margin-top: 30px;
+}
+
+/* Pop-in Hint Drawer */
+.hint-box {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 15px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 350px;
+  border-radius: 16px;
+  display: none;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  font-weight: 600;
+}
+
+.hint-box.visible {
+  display: block;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+#btn-quit-after-quiz {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  display: inline-block;
+  padding: 10px;
+}
+#btn-quit-after-quiz:hover, #btn-quit-game:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* The Mini-Game Bird Target */
+#bird-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 45px; 
+  width: 70px; 
+  height: 70px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255,255,255,0.6);
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: none;
+  animation: floatBird 1.5s ease-in-out infinite;
+}
+
+@keyframes floatBird {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Quiz Option Cards Styling */
+#options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 90%;
+  max-width: 400px;
+  margin: 15px auto;
+}
+
+#options-container button {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+#options-container button:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
 /* Obvious Correct Answer State */
 #options-container button.correct {
   background: linear-gradient(135deg, #059669, #10b981) !important;
@@ -84,260 +308,26 @@ h2#question-text {
   border: 2px solid #f87171 !important;
   box-shadow: 0 0 25px rgba(239, 68, 68, 0.85) !important;
 }
-    
 
-/* Modern Input Field Styling */
-input[type="text"] {
-  padding: 16px 20px;
-  margin: 15px 10px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 30px;
-  width: 85%;
-  max-width: 350px;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(12px);
-  color: #ffffff;
-  text-align: center;
-  outline: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  -webkit-user-select: text;
-  user-select: text;
-}
-
-input[type="text"]::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-input[type="text"]:focus {
-  background: rgba(255, 255, 255, 0.35);
-  border-color: #ffffff;
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
-}
-    
-/* Screen State & Fade Animations */
-/* Ensure screens can anchor absolute elements */
-.screen {
-  position: relative; /* Crucial for positioning the corner icons */
-  display: none; 
-  width: 100%;
-  min-height: 100vh;
-  /* Increased top padding to 80px so content always starts safely below the icons */
-  padding: 80px 20px 40px 20px; 
-  box-sizing: border-box;
-  text-align: center;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  overflow-y: auto;
-  animation: fadeIn 0.4s ease-out forwards;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* Keeps titles neatly contained in the center, away from corner buttons */
-.screen h1, .screen h2 {
-  max-width: 75%; 
-  margin-top: 0;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Sleek Corner Exit Icon */
-.corner-exit-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.4);
-  border: none;
-  border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  transition: all 0.2s ease;
-  z-index: 100;
-  touch-action: manipulation;
-}
-
-/* Sleek Top-Left Home Icon */
-.corner-home-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: rgba(255, 255, 255, 0.4);
-  border: none;
-  border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  transition: all 0.2s ease;
-  z-index: 100;
-  touch-action: manipulation;
-}
-
-.corner-home-btn:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: scale(1.08);
-}
-
-.corner-exit-btn:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: scale(1.08);
-}
-
-.screen.active {
-  display: flex;
-}
-/* Stop accidental zooming on rapid taps while keeping scrolling active */
-button, input[type="text"], #btn-quit-after-quiz {
-  touch-action: manipulation;
-}
-
-/* Lock tracking on the bird so fast tapping doesn't drag or zoom the screen */
-#bird-target {
-  position: absolute; /* Crucial: Allows the bird to move freely via JavaScript top/left coordinates */
-  font-size: 50px;     /* Adjust size as desired */
-  cursor: pointer;
-  user-select: none;   /* Prevents highlighting the emoji */
-  touch-action: none;  /* Prevents dragging/scrolling interference on mobile */
-  transition: top 0.2s ease, left 0.2s ease; /* Optional: adds a smooth glide effect when it moves */
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Typography Polish */
-h1, h2 {
-  font-weight: 800;
-  margin-bottom: 20px;
-  color: #1e272e;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Glassmorphism Quiz Card */
-h2#question-text {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px); /* The frosted glass effect */
-  padding: 25px 20px;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+/* Quiz Progress Bar Styling */
+.quiz-progress-bar-container {
   width: 90%;
   max-width: 400px;
-  font-size: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-/* Modern Pill Buttons with Glow */
-button {
-  padding: 16px 24px;
-  margin: 10px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #00b09b, #96c93d); /* Fresh nature green-teal gradient */
-  border: none;
-  border-radius: 30px;
-  width: 90%;
-  max-width: 350px;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(0, 176, 155, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-
-button:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 10px 30px rgba(0, 176, 155, 0.5);
-}
-
-button:active {
-  transform: scale(0.96);
-  box-shadow: 0 4px 15px rgba(0, 176, 155, 0.2);
-}
-
-/* Corner Navigation Icons */
-.corner-exit-btn, .corner-home-btn {
+  height: 8px;
   background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin: 0 auto 15px auto;
+  overflow: hidden;
 }
 
-.corner-exit-btn:hover, .corner-home-btn:hover {
-  background: rgba(255, 255, 255, 0.4);
-  transform: scale(1.1);
+.quiz-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  border-radius: 4px;
+  transition: width 0.4s ease;
 }
     
-
-/* Pop-in Hint Drawer */
-.hint-box {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 15px;
-  margin: 20px auto;
-  width: 90%;
-  max-width: 350px;
-  border-radius: 16px;
-  display: none;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  font-weight: 600;
-}
-
-.hint-box.visible {
-  display: block;
-  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
-}
-/* Ensure the exit text is fully interactive */
-#btn-quit-after-quiz {
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  display: inline-block;
-  padding: 10px; /* Expands the invisible touch area for fingers */
-}
-#btn-quit-after-quiz:hover, #btn-quit-game:hover {
-  opacity: 1;
-  text-decoration: underline;
-}
-/* The New Bird Target */
-#bird-target {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 45px; 
-  width: 70px; 
-  height: 70px;
-  background: rgba(255, 255, 255, 0.3); /* Frosted bubble */
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255,255,255,0.6);
-  border-radius: 50%;
-  position: absolute;
-  cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
   </style>
 </head>
 <body>
