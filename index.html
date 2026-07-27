@@ -9,14 +9,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
 /* Global Background & Mobile Lock */
+:root {
+  --bg-gradient: linear-gradient(135deg, #134e5e 0%, #71b280 100%); /* Deep rich forest-to-teal gradient */
+  --card-bg: rgba(255, 255, 255, 0.15); /* Frosted glass with more transparency */
+  --card-border: rgba(255, 255, 255, 0.3);
+  --text-main: #ffffff;
+  --text-muted: #e2e8f0;
+  --accent-purple: #6c5ce7;
+  --accent-glow: rgba(108, 92, 231, 0.4);
+}
+
+/* Global Background */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
-  color: #2d3436;
-  overflow: auto; /* Keeps page scrolling enabled */
+  background: var(--bg-gradient);
+  background-attachment: fixed; /* Keeps the gradient locked nicely when scrolling */
+  color: #1e272e; /* Dark readable text for elements outside glass cards if needed */
+  min-height: 100vh;
+  -webkit-user-select: none;
+  user-select: none;
 }
+    
 /* Prevent accidental text highlighting during fast tapping */
 body {
   -webkit-user-select: none; /* Safari */
@@ -33,29 +48,56 @@ input[type="text"] {
   user-select: text;
 }
 
-/* Modern Input Field */
+/* Glassmorphism Quiz Card & Welcome Screen Container */
+h2#question-text, .screen h1, .screen h2 {
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+h2#question-text {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 25px 20px;
+  border-radius: 24px;
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+  width: 90%;
+  max-width: 400px;
+  font-size: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Modern Input Field Styling */
 input[type="text"] {
   padding: 16px 20px;
   margin: 15px 10px;
   font-family: 'Poppins', sans-serif;
   font-size: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 30px;
   width: 85%;
   max-width: 350px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  color: #2d3436;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  color: #ffffff;
   text-align: center;
   outline: none;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  transition: box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 input[type="text"]:focus {
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
+  background: rgba(255, 255, 255, 0.35);
+  border-color: #ffffff;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
 }
+    
 /* Screen State & Fade Animations */
 /* Ensure screens can anchor absolute elements */
 .screen {
@@ -180,7 +222,7 @@ h2#question-text {
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-/* Modern Pill Buttons */
+/* Modern Pill Buttons with Glow */
 button {
   padding: 16px 24px;
   margin: 10px;
@@ -188,30 +230,41 @@ button {
   font-size: 18px;
   font-weight: 600;
   color: #fff;
-  background: linear-gradient(135deg, #6c5ce7, #a29bfe); /* Purple gradient */
+  background: linear-gradient(135deg, #00b09b, #96c93d); /* Fresh nature green-teal gradient */
   border: none;
-  border-radius: 30px; /* Fully rounded edges */
+  border-radius: 30px;
   width: 90%;
   max-width: 350px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
-  transition: transform 0.1s, box-shadow 0.1s;
+  box-shadow: 0 8px 25px rgba(0, 176, 155, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* The "Press" Animation */
-button:active {
-  transform: scale(0.95);
-  box-shadow: 0 2px 8px rgba(108, 92, 231, 0.2);
+button:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 10px 30px rgba(0, 176, 155, 0.5);
 }
 
-/* Distinct Hint Button */
-#hint-btn {
-  background: linear-gradient(135deg, #fdcb6e, #ffeaa7);
-  color: #2d3436;
-  box-shadow: 0 4px 15px rgba(253, 203, 110, 0.3);
-  margin-top: 30px;
+button:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 15px rgba(0, 176, 155, 0.2);
 }
+
+/* Corner Navigation Icons */
+.corner-exit-btn, .corner-home-btn {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.corner-exit-btn:hover, .corner-home-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+    
 
 /* Pop-in Hint Drawer */
 .hint-box {
