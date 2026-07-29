@@ -399,7 +399,6 @@ let timeLeft = 15;
 let birdMoverInterval;
 let timerInterval;
 
-// Speed Quiz & Timer State Variables
 let currentQuizMode = "classic"; // 'classic' or 'speed'
 let quizTimerInterval = null;
 let quizTimeLeft = 10;
@@ -423,8 +422,402 @@ const gameModeMenu = document.getElementById("game-mode-menu");
 const homeModeMenu = document.getElementById("home-mode-menu");
 
 const quizScreen = document.getElementById("quiz-screen");
-const quizHud = document.getElementById("quiz-hud");
+const timerContainerWrapper = document.getElementById("timer-container-wrapper");
 const timerBar = document.getElementById("timer-bar");
 const hudScore = document.getElementById("hud-score");
 const multiplierBadge = document.getElementById("multiplier-badge");
-const questionTimer = document.getElementById("question-tim
+const questionTimer = document.getElementById("question-timer");
+
+const gameScreen = document.getElementById("game-screen");
+const gameOverScreen = document.getElementById("game-over-screen");
+
+const questionText = document.getElementById("question-text");
+const optionsContainer = document.getElementById("options-container");
+const hintBtn = document.getElementById("hint-btn");
+const hintDrawer = document.getElementById("hint-drawer");
+const hintText = document.getElementById("hint-text");
+const hintImage = document.getElementById("hint-image");
+
+const btnPlayQuizAgain = document.getElementById("btn-play-quiz-again");
+const exitQuizComplete = document.getElementById("exit-quiz-complete");
+const exitGame = document.getElementById("exit-game");
+
+const homeQuiz = document.getElementById("home-quiz");
+const homeQuizComplete = document.getElementById("home-quiz-complete");
+const homeGame = document.getElementById("home-game");
+
+const exitWelcome = document.getElementById("exit-welcome");
+const exitGameOver = document.getElementById("exit-gameover");
+
+const quizCompleteScreen = document.getElementById("quiz-complete-screen");
+const btnStartGameAfterQuiz = document.getElementById("btn-start-game-after-quiz");
+
+// ==========================================
+// 4. ROUTING & MENU LOGIC
+// ==========================================
+startGameBtn.addEventListener("click", () => {
+  const name = playerNameInput.value.trim();
+  gameState.playerName = name === "" ? "Student" : name;
+  
+  playPopSound(); 
+  welcomeText.innerText = `Welcome, ${gameState.playerName}!`;
+  
+  loginScreen.classList.remove("active");
+  welcomeScreen.classList.add("active");
+});
+
+btnChooseQuiz.addEventListener("click", () => {
+  playPopSound();
+  welcomeScreen.classList.remove("active");
+  gameModeMenu.classList.add("active");
+});
+
+homeModeMenu.addEventListener("click", returnToDashboard);
+
+function startQuizWithMode(mode) {
+  playPopSound();
+  currentQuizMode = mode;
+  streakCount = 0;
+  scoreMultiplier = 1;
+  gameState.score = 0;
+  gameState.currentQuestionIndex = 0;
+
+  gameModeMenu.classList.remove("active");
+  quizScreen.classList.add("active");
+
+  if (currentQuizMode === "speed") {
+    timerContainerWrapper.style.display = "block";
+    questionTimer.style.display = "inline";
+  } else {
+    timerContainerWrapper.style.display = "none";
+    questionTimer.style.display = "none";
+  }
+
+  renderQuiz();
+}
+
+btnPlayQuizAgain.addEventListener("click", () => {
+  playPopSound();
+  gameState.currentQuestionIndex = 0;
+  gameState.score = 0;
+  streakCount = 0;
+  scoreMultiplier = 1;
+  updateMultiplierBadge();
+  
+  quizCompleteScreen.classList.remove("active");
+  quizScreen.classList.add("active");
+  renderQuiz();
+});
+
+exitQuizComplete.addEventListener("click", () => {
+  playPopSound();
+  resetAllData();
+  quizCompleteScreen.classList.remove("active");
+  loginScreen.classList.add("active");
+});
+
+exitGame.addEventListener("click", () => {
+  playPopSound();
+  clearInterval(birdMoverInterval);
+  clearInterval(timerInterval);
+  resetAllData();
+  gameScreen.classList.remove("active");
+  loginScreen.classList.add("active");
+});
+
+btnChooseGame.addEventListener("click", () => {
+  playPopSound();
+  welcomeScreen.classList.remove("active");
+  gameScreen.classList.add("active");
+  startMiniGame();
+});
+
+btnStartGameAfterQuiz.addEventListener("click", () => {
+  playPopSound();
+  quizCompleteScreen.classList.remove("active");
+  gameScreen.classList.add("active");
+  startMiniGame();
+});
+
+// ==========================================
+// 5. THE QUIZ ENGINE & TIMERS
+// ==========================================
+function renderQuiz() {
+  optionsContainer.innerHTML = "";
+  hintDrawer.classList.remove("visible");
+  clearInterval(quizTimerInterval);
+
+  let currentData = birdQuizData[gameState.currentQuestionIndex];
+  questionText.innerText = currentData.question;
+  hintText.innerText = currentData.hint;
+
+  hudScore.innerText = `Score: ${gameState.score}`;
+
+  currentData.options.forEach(option => {
+    const button = document.createElement("button");
+    button.innerText = option;
+    button.addEventListener("click", () => handleAnswerSubmit(option, currentData.correctAnswer, button));
+    optionsContainer.appendChild(button);
+  });
+
+  if (currentQuizMode === "speed") {
+    startSpeedQuizTimer();
+  }
+}
+
+hintBtn.addEventListener("click", () => {
+  hintDrawer.classList.add("visible");
+  let currentData = birdQuizData[gameState.currentQuestionIndex];
+  
+  if (currentData.hintImage) {
+    hintImage.src = currentData.hintImage;
+    hintImage.style.display = "block";
+  } else {
+    hintImage.style.display = "none";
+  }
+});
+
+function startSpeedQuizTimer() {
+  quizTimeLeft = 10;
+  timerBar.style.width = "100%";
+  timerBar.style.background = "#10b981";
+  questionTimer.innerText = `⏱️ ${quizTimeLeft}s`;
+
+  quizTimerInterval = setInterval(() => {
+    quizTimeLeft--;
+    questionTimer.innerText = `⏱️ ${quizTimeLeft}s`;
+    
+    const percentage = (quizTimeLeft / 10) * 100;
+    timerBar.style.width = `${percentage}%`;
+
+    if (quizTimeLeft <= 3) {
+      timerBar.style.background = "#ef4444";
+    }
+
+    if (quizTimeLeft <= 0) {
+      clearInterval(quizTimerInterval);
+      handleQuizTimeOut();
+    }
+  }, 1000);
+}
+
+function handleQuizTimeOut() {
+  playWrongSound();
+  streakCount = 0;
+  scoreMultiplier = 1;
+  updateMultiplierBadge();
+
+  const allButtons = optionsContainer.querySelectorAll("button");
+  let currentData = birdQuizData[gameState.currentQuestionIndex];
+  
+  allButtons.forEach(btn => {
+    btn.disabled = true;
+    if (btn.innerText === currentData.correctAnswer) {
+      btn.style.background = "linear-gradient(135deg, #00b09b, #96c93d)";
+    }
+  });
+
+  setTimeout(() => {
+    proceedToNextQuestion();
+  }, 1200);
+}
+
+function handleAnswerSubmit(selectedOption, correctAnswer, clickedButton) {
+  clearInterval(quizTimerInterval);
+
+  const allButtons = optionsContainer.querySelectorAll("button");
+  allButtons.forEach(btn => btn.disabled = true);
+
+  if (selectedOption === correctAnswer) {
+    playPopSound(); 
+    
+    streakCount++;
+    if (streakCount >= 5) scoreMultiplier = 3;
+    else if (streakCount >= 3) scoreMultiplier = 2;
+    else scoreMultiplier = 1;
+
+    let pointsEarned = 1 * scoreMultiplier;
+    gameState.score += pointsEarned;
+    
+    clickedButton.style.background = "linear-gradient(135deg, #00b09b, #96c93d)";
+  } else {
+    playWrongSound(); 
+    streakCount = 0;
+    scoreMultiplier = 1;
+    
+    clickedButton.style.background = "linear-gradient(135deg, #ff416c, #ff4b2b)";
+    
+    allButtons.forEach(btn => {
+      if (btn.innerText === correctAnswer) {
+        btn.style.background = "linear-gradient(135deg, #00b09b, #96c93d)";
+      }
+    });
+  }
+  
+  hudScore.innerText = `Score: ${gameState.score}`;
+  updateMultiplierBadge();
+
+  setTimeout(() => {
+    proceedToNextQuestion();
+  }, 1200);
+}
+
+function proceedToNextQuestion() {
+  gameState.currentQuestionIndex++;
+  
+  if (gameState.currentQuestionIndex < birdQuizData.length) {
+    renderQuiz(); 
+  } else {
+    clearInterval(quizTimerInterval);
+
+    document.getElementById("quiz-score-display").innerText = gameState.score;
+    document.getElementById("quiz-total-display").innerText = birdQuizData.length;
+
+    const encouragementDisplay = document.getElementById("quiz-encouragement-text");
+    const scorePercentage = gameState.score / birdQuizData.length;
+    
+    if (scorePercentage === 1) {
+      encouragementDisplay.innerText = "Flawless victory! You are a true bird expert! 🦉";
+    } else if (scorePercentage >= 0.5) {
+      encouragementDisplay.innerText = "Great job! You really know your feathers! 🦅";
+    } else {
+      encouragementDisplay.innerText = "Good effort! Every expert starts as a beginner! 🐣";
+    }
+
+    quizScreen.classList.remove("active");
+    quizCompleteScreen.classList.add("active"); 
+  }
+}
+
+function updateMultiplierBadge() {
+  if (scoreMultiplier > 1) {
+    multiplierBadge.style.display = "inline-block";
+    multiplierBadge.innerText = `🔥 ${scoreMultiplier}x Multiplier!`;
+  } else {
+    multiplierBadge.style.display = "none";
+  }
+}
+
+// ==========================================
+// 6. THE MINI-GAME ENGINE
+// ==========================================
+function startMiniGame() {
+  gameScore = 0;
+  timeLeft = 15;
+  
+  const birdTarget = document.getElementById("bird-target");
+  const scoreDisplay = document.getElementById("game-score");
+  const timeDisplay = document.getElementById("time-display");
+  
+  scoreDisplay.innerText = gameScore;
+  timeDisplay.innerText = timeLeft;
+
+  function repositionBird() {
+    const maxX = window.innerWidth - 90;
+    const maxY = window.innerHeight - 100;
+    const minTop = 180;
+    
+    const x = Math.max(20, Math.floor(Math.random() * maxX));
+    const y = Math.floor(Math.random() * (maxY - minTop)) + minTop;
+    
+    birdTarget.style.left = `${x}px`;
+    birdTarget.style.top = `${y}px`;
+  }
+
+  birdMoverInterval = setInterval(repositionBird, 800);
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timeDisplay.innerText = timeLeft;
+    
+    if (timeLeft <= 0) {
+      endGame();
+    }
+  }, 1000);
+
+  birdTarget.addEventListener("pointerdown", () => {
+    playPopSound();
+    gameScore++;
+    scoreDisplay.innerText = gameScore;
+    repositionBird();
+  });
+}
+
+function endGame() {
+  clearInterval(birdMoverInterval);
+  clearInterval(timerInterval);
+
+  gameScreen.classList.remove("active");
+  gameOverScreen.classList.add("active");
+  document.getElementById("final-score").innerText = gameScore;
+  document.getElementById("display-player-name").innerText = gameState.playerName;
+}
+
+document.getElementById("restart-btn").addEventListener("click", () => {
+  playPopSound();
+  gameState.currentQuestionIndex = 0;
+  gameState.score = 0;
+  streakCount = 0;
+  scoreMultiplier = 1;
+  
+  welcomeText.innerText = `Welcome, ${gameState.playerName}!`;
+  gameOverScreen.classList.remove("active");
+  welcomeScreen.classList.add("active");
+});
+
+// ==========================================
+// 7. NAVIGATION & HELPERS
+// ==========================================
+function returnToDashboard() {
+  playPopSound();
+  
+  clearInterval(birdMoverInterval);
+  clearInterval(timerInterval);
+  clearInterval(quizTimerInterval);
+  
+  gameState.currentQuestionIndex = 0;
+  gameState.score = 0;
+  streakCount = 0;
+  scoreMultiplier = 1;
+  
+  welcomeText.innerText = `Welcome, ${gameState.playerName}!`;
+  
+  quizScreen.classList.remove("active");
+  gameModeMenu.classList.remove("active");
+  quizCompleteScreen.classList.remove("active");
+  gameScreen.classList.remove("active");
+  welcomeScreen.classList.add("active");
+}
+
+homeQuiz.addEventListener("click", returnToDashboard);
+homeQuizComplete.addEventListener("click", returnToDashboard);
+homeGame.addEventListener("click", returnToDashboard);
+
+exitWelcome.addEventListener("click", () => {
+  playPopSound();
+  resetAllData();
+  welcomeScreen.classList.remove("active");
+  loginScreen.classList.add("active");
+});
+
+exitGameOver.addEventListener("click", () => {
+  playPopSound();
+  resetAllData();
+  gameOverScreen.classList.remove("active");
+  loginScreen.classList.add("active");
+});
+
+function resetAllData() {
+  gameState.currentQuestionIndex = 0;
+  gameState.score = 0;
+  gameState.playerName = "";
+  streakCount = 0;
+  scoreMultiplier = 1;
+  playerNameInput.value = "";
+  
+  gameOverScreen.classList.remove("active");
+  loginScreen.classList.add("active");
+};
+
+// 7. KICK OFF THE APP
+renderQuiz();
