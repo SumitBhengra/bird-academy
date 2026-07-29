@@ -473,6 +473,16 @@ btnChooseQuiz.addEventListener("click", () => {
 });
 
 homeModeMenu.addEventListener("click", returnToDashboard);
+// Fisher-Yates shuffle algorithm to randomize questions
+function shuffleArray(array) {
+  let shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+let activeQuizData = [];
 
 function startQuizWithMode(mode) {
   playPopSound();
@@ -482,6 +492,8 @@ function startQuizWithMode(mode) {
   gameState.score = 0;
   gameState.currentQuestionIndex = 0;
 
+  activeQuizData = shuffleArray(birdQuizData)
+  
   gameModeMenu.classList.remove("active");
   quizScreen.classList.add("active");
 
@@ -547,7 +559,7 @@ function renderQuiz() {
   hintDrawer.classList.remove("visible");
   clearInterval(quizTimerInterval);
 
-  let currentData = birdQuizData[gameState.currentQuestionIndex];
+  let currentData = activeQuizData[gameState.currentQuestionIndex];
   questionText.innerText = currentData.question;
   hintText.innerText = currentData.hint;
 
@@ -567,7 +579,7 @@ function renderQuiz() {
 
 hintBtn.addEventListener("click", () => {
   hintDrawer.classList.add("visible");
-  let currentData = birdQuizData[gameState.currentQuestionIndex];
+  let currentData = activeQuizData[gameState.currentQuestionIndex];
   
   if (currentData.hintImage) {
     hintImage.src = currentData.hintImage;
@@ -608,7 +620,7 @@ function handleQuizTimeOut() {
   updateMultiplierBadge();
 
   const allButtons = optionsContainer.querySelectorAll("button");
-  let currentData = birdQuizData[gameState.currentQuestionIndex];
+  let currentData = activeQuizData[gameState.currentQuestionIndex];
   
   allButtons.forEach(btn => {
     btn.disabled = true;
@@ -671,10 +683,10 @@ function proceedToNextQuestion() {
     clearInterval(quizTimerInterval);
 
     document.getElementById("quiz-score-display").innerText = gameState.score;
-    document.getElementById("quiz-total-display").innerText = birdQuizData.length;
+    document.getElementById("quiz-total-display").innerText = activeQuizData.length;
 
     const encouragementDisplay = document.getElementById("quiz-encouragement-text");
-    const scorePercentage = gameState.score / birdQuizData.length;
+    const scorePercentage = gameState.score / activeQuizData.length;
     
     if (scorePercentage === 1) {
       encouragementDisplay.innerText = "Flawless victory! You are a true bird expert! 🦉";
