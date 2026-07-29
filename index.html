@@ -405,7 +405,6 @@ button:active {
 </head>
 <body>
 
-  <body>
   <!-- LAYER 0: LOGIN SCREEN -->
   <section id="login-screen" class="screen active">
     <h1>Bird Academy</h1>
@@ -413,32 +412,33 @@ button:active {
     <input type="text" id="player-name" placeholder="Your Name..." autocomplete="off">
     <button id="start-game-btn">Start Game</button>
   </section>
+
   <!-- LAYER 0.5: WELCOME DASHBOARD -->
   <section id="welcome-screen" class="screen">
-
     <button class="corner-exit-btn" id="exit-welcome" title="Exit to Login">🚪</button>
     <h1 id="welcome-text">Welcome!</h1>
     <h2>What would you like to do today?</h2>
     <button id="btn-choose-quiz">Start the Quiz</button>
     <button id="btn-choose-game">Play the Tapping Game</button>
   </section>
+
   <!-- LAYER 0.75: GAME MODE SELECTION MENU -->
   <section id="game-mode-menu" class="screen">
     <button class="corner-home-btn" id="home-mode-menu" title="Back to Dashboard">🏠</button>
     <h2>Choose Your Game Mode 🦅</h2>
     <p style="color: var(--text-muted); margin-bottom: 24px;">Test your bird knowledge your way!</p>
     
-    <div class="mode-cards-grid" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 400px;">
-      <button class="mode-card" onclick="selectGameMode('classic')" style="width: 100%; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); cursor: pointer; text-align: center;">
+    <div class="mode-cards-grid" style="display: flex; flex-direction: column; gap: 16px; align-items: center; width: 100%;">
+      <button onclick="startQuizWithMode('classic')" style="max-width: 350px; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); text-align: center; cursor: pointer;">
         <span style="font-size: 2rem;">📖</span>
-        <h3 style="margin: 10px 0 5px 0;">Classic Mode</h3>
-        <p style="font-size: 14px; margin: 0; color: #e2e8f0;">No timer. Learn at your own pace.</p>
+        <h3 style="margin: 10px 0 5px 0; color: #ffffff;">Classic Mode</h3>
+        <p style="font-size: 14px; margin: 0; color: #e2e8f0; font-weight: normal;">No timer. Learn at your own pace.</p>
       </button>
 
-      <button class="mode-card speed-card" onclick="selectGameMode('speed')" style="width: 100%; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1px solid #f59e0b; cursor: pointer; text-align: center; margin-top: 10px;">
+      <button onclick="startQuizWithMode('speed')" style="max-width: 350px; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 2px solid #f59e0b; text-align: center; cursor: pointer;">
         <span style="font-size: 2rem;">⚡</span>
-        <h3 style="margin: 10px 0 5px 0;">Speed Quiz</h3>
-        <p style="font-size: 14px; margin: 0; color: #e2e8f0;">10 seconds per question. Rack up multipliers!</p>
+        <h3 style="margin: 10px 0 5px 0; color: #ffffff;">Speed Quiz</h3>
+        <p style="font-size: 14px; margin: 0; color: #e2e8f0; font-weight: normal;">10 seconds per question. Rack up multipliers!</p>
       </button>
     </div>
   </section>
@@ -448,25 +448,26 @@ button:active {
     <!-- Home button on the top-left -->
     <button class="corner-home-btn" id="home-quiz" title="Back to Dashboard">🏠</button>
     <h1>Bird Academy Quiz</h1>
-    <!-- 👇 NEW: Timer HUD & Multiplier Bar (Hidden in classic mode, shown in speed mode) -->
-    <div id="quiz-hud" class="quiz-hud hidden" style="width: 90%; max-width: 400px; margin-bottom: 15px;">
-      <div class="timer-container" style="width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 6px;">
-        <div id="timer-bar" class="timer-bar" style="height: 100%; width: 100%; background: #10b981; transition: width 1s linear;"></div>
+    
+    <!-- TIMER HUD (Visible in speed mode, hidden in classic mode) -->
+    <div id="quiz-hud" style="width: 90%; max-width: 400px; margin-bottom: 15px; display: none;">
+      <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 6px;">
+        <div id="timer-bar" style="height: 100%; width: 100%; background: #10b981; transition: width 1s linear;"></div>
       </div>
-      <div class="hud-stats" style="display: flex; justify-content: space-between; font-weight: 600; font-size: 14px;">
+      <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 14px; color: #ffffff;">
         <span id="hud-score">Score: 0</span>
         <span id="multiplier-badge" style="background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: none;">🔥 2x Streak!</span>
         <span id="question-timer">⏱️ 10s</span>
       </div>
     </div>
-    <!-- 👆 END OF TIMER HUD -->
+
     <h2 id="question-text">Loading question...</h2>
     <div id="options-container"></div>
     <br>
     <button id="hint-btn">Need a Hint?</button>
     <div id="hint-drawer" class="hint-box">
       <p id="hint-text"></p>
-      <!-- NEW: Image container for hints -->
+      <!-- Image container for hints -->
       <img id="hint-image" src="" alt="Hint Visual" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 12px; margin-top: 10px; display: none;">
     </div>
   </section>
@@ -490,7 +491,7 @@ button:active {
   <section id="game-screen" class="screen">
     <!-- Home button on the top-left -->
     <button class="corner-home-btn" id="home-game" title="Back to Dashboard">🏠</button>
-    <!-- Moved safely to the top right corner away from tapping zone -->
+    <!-- Exit button on top right -->
     <button class="corner-exit-btn" id="exit-game" title="Exit to Login">🚪</button>
     
     <h2>Tap the Bird!</h2>
@@ -507,7 +508,7 @@ button:active {
     <button id="restart-btn">Play Again</button>
   </section>
 
-  <!-- Connects to your JavaScript engine below -->
+  <!-- Connects to your JavaScript engine -->
   <script src="app.js"></script>
 </body>
 </html>
