@@ -65,7 +65,80 @@ input[type="text"]:focus {
   background: rgba(255, 255, 255, 0.35);
   box-shadow: 0 4px 20px rgba(255, 255, 255, 0.4);
 }
+/* --- GAME MODE & TIMER STYLES --- */
+.mode-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  width: 220px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
+.mode-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.speed-card {
+  border-color: #f59e0b;
+}
+
+.speed-card:hover {
+  border-color: #d97706;
+}
+
+/* HUD & Timer bar */
+.quiz-hud {
+  margin-bottom: 20px;
+}
+
+.timer-container {
+  width: 100%;
+  height: 8px;
+  background: var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.timer-bar {
+  height: 100%;
+  width: 100%;
+  background: #10b981;
+  transition: width 1s linear, background-color 0.3s ease;
+}
+
+.timer-bar.warning {
+  background: #ef4444; /* Turns red when time is running out */
+}
+
+.hud-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.multiplier-badge {
+  background: #fef3c7;
+  color: #d97706;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+    
 /* Screen State & Fade Animations */
 .screen {
   position: relative;
@@ -349,12 +422,44 @@ button:active {
     <button id="btn-choose-quiz">Start the Quiz</button>
     <button id="btn-choose-game">Play the Tapping Game</button>
   </section>
+  <!-- LAYER 0.75: GAME MODE SELECTION MENU -->
+  <section id="game-mode-menu" class="screen">
+    <button class="corner-home-btn" id="home-mode-menu" title="Back to Dashboard">🏠</button>
+    <h2>Choose Your Game Mode 🦅</h2>
+    <p style="color: var(--text-muted); margin-bottom: 24px;">Test your bird knowledge your way!</p>
+    
+    <div class="mode-cards-grid" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 400px;">
+      <button class="mode-card" onclick="selectGameMode('classic')" style="width: 100%; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); cursor: pointer; text-align: center;">
+        <span style="font-size: 2rem;">📖</span>
+        <h3 style="margin: 10px 0 5px 0;">Classic Mode</h3>
+        <p style="font-size: 14px; margin: 0; color: #e2e8f0;">No timer. Learn at your own pace.</p>
+      </button>
 
+      <button class="mode-card speed-card" onclick="selectGameMode('speed')" style="width: 100%; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.2); border: 1px solid #f59e0b; cursor: pointer; text-align: center; margin-top: 10px;">
+        <span style="font-size: 2rem;">⚡</span>
+        <h3 style="margin: 10px 0 5px 0;">Speed Quiz</h3>
+        <p style="font-size: 14px; margin: 0; color: #e2e8f0;">10 seconds per question. Rack up multipliers!</p>
+      </button>
+    </div>
+  </section>
+    
   <!-- LAYER 1: QUIZ SCREEN -->
   <section id="quiz-screen" class="screen">
     <!-- Home button on the top-left -->
     <button class="corner-home-btn" id="home-quiz" title="Back to Dashboard">🏠</button>
     <h1>Bird Academy Quiz</h1>
+    <!-- 👇 NEW: Timer HUD & Multiplier Bar (Hidden in classic mode, shown in speed mode) -->
+    <div id="quiz-hud" class="quiz-hud hidden" style="width: 90%; max-width: 400px; margin-bottom: 15px;">
+      <div class="timer-container" style="width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 6px;">
+        <div id="timer-bar" class="timer-bar" style="height: 100%; width: 100%; background: #10b981; transition: width 1s linear;"></div>
+      </div>
+      <div class="hud-stats" style="display: flex; justify-content: space-between; font-weight: 600; font-size: 14px;">
+        <span id="hud-score">Score: 0</span>
+        <span id="multiplier-badge" style="background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: none;">🔥 2x Streak!</span>
+        <span id="question-timer">⏱️ 10s</span>
+      </div>
+    </div>
+    <!-- 👆 END OF TIMER HUD -->
     <h2 id="question-text">Loading question...</h2>
     <div id="options-container"></div>
     <br>
