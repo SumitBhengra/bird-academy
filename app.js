@@ -414,6 +414,83 @@ const birdQuizData = [
     audioUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Costa_Rican_Pygmy_Owl_%28Glaucidium_costaricanum%29_call.ogg"
   }
 ];
+// Add or append these audio questions to your birdQuizData array in app.js:
+
+const audioBirdQuestions = [
+  {
+    question: "Listen closely! Which famous bird makes this iconic 'coo-coo' vocalization?",
+    options: ["Cuckoo", "Pigeon", "Mourning Dove", "Owl"],
+    correctAnswer: "Cuckoo",
+    hint: "It is famous for laying eggs in other birds' nests and making cuckoo clocks tick!",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/7/77/Cuculus_canorus.ogg"
+  },
+  {
+    question: "Listen to this haunting, ethereal call! Which aquatic bird produces this haunting sound on lakes?",
+    options: ["Common Loon", "Albatross", "Pelican", "Mallard Duck"],
+    correctAnswer: "Common Loon",
+    hint: "It is famous for its striking black-and-white pattern and eerie wilderness call.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Loon_call.ogg"
+  },
+  {
+    question: "Listen to the cheerful song! Which classic North American songbird is singing here?",
+    options: ["American Robin", "Blue Jay", "Crow", "Sparrow"],
+    correctAnswer: "American Robin",
+    hint: "It has a reddish-orange breast and is often seen pulling worms from lawns.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/American_Robin_Yellowstone_National_Park.ogg"
+  },
+  {
+    question: "Listen to these rapid, cheerful chirps! Which popular pet bird is making this sound?",
+    options: ["Budgerigar (Budgie)", "Cockatoo", "Macaw", "Canary"],
+    correctAnswer: "Budgerigar (Budgie)",
+    hint: "It is a small, highly social Australian parrot popular in homes worldwide.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/0/08/Budgerigar_chirping.ogg"
+  },
+  {
+    question: "Listen to this high-pitched whistle call! Which small nocturnal owl produces this sound?",
+    options: ["Costa Rican Pygmy Owl", "Barn Owl", "Great Horned Owl", "Snowy Owl"],
+    correctAnswer: "Costa Rican Pygmy Owl",
+    hint: "Despite being an owl, it is tiny and hunts during the day and twilight.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Costa_Rican_Pygmy_Owl_%28Glaucidium_costaricanum%29_call.ogg"
+  },
+  {
+    question: "Listen to this soft, resonant call! Which sacred Mesoamerican bird of paradise makes this sound?",
+    options: ["Resplendent Quetzal", "Toucan", "Flamingo", "Hornbill"],
+    correctAnswer: "Resplendent Quetzal",
+    hint: "It features long, metallic green tail feathers and a bright red chest.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Resplendent_Quetzal_song_%28Pharomachrus_mocinno%29.ogg"
+  },
+  {
+    question: "Listen to this deep trumpet-like call! Which striking waterfowl species is calling?",
+    options: ["Black Swan", "Flamingo", "Pelican", "Puffin"],
+    correctAnswer: "Black Swan",
+    hint: "Native to Australia, it has dark feathers and a bright red bill.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c9/Black_Swan_call_%28Cygnus_atratus%29.ogg"
+  },
+  {
+    question: "Listen to this harsh, croaking call! Which tall, elegant wading bird makes this sound in wetlands?",
+    options: ["Great Egret", "Flamingo", "Swan", "Seagull"],
+    correctAnswer: "Great Egret",
+    hint: "It has pure white plumage, long black legs, and a sharp yellow bill.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Great_Egret_%28Ardea_alba_alba%29_call.ogg"
+  },
+  {
+    question: "Listen to this rich, melodic song! Which widespread European songbird is performing here?",
+    options: ["Common Blackbird", "Woodpecker", "Peregrine Falcon", "Cuckoo"],
+    correctAnswer: "Common Blackbird",
+    hint: "Males are all black with a bright yellow bill and ring around their eyes.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/2/23/Common_Blackbird_song_%28Turdus_merula%29.ogg"
+  }
+];
+birdQuizData.push(...extraAudioQuestions);
 
 // ==========================================
 // 2. THE APPLICATION STATE & TIMERS
