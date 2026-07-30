@@ -318,6 +318,11 @@
   </button>
     <h2 id="question-text">Loading question...</h2>
     <div id="options-container"></div>
+    <!-- 👇 NEW: PREVIOUS & NEXT NAVIGATION BUTTONS -->
+    <div id="quiz-nav-container" style="display: flex; justify-content: space-between; width: 90%; max-width: 400px; margin: 10px auto 0 auto; gap: 10px;">
+      <button id="prev-btn" style="flex: 1; margin: 0; padding: 12px; font-size: 15px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px);">⬅️ Prev</button>
+      <button id="next-btn" style="flex: 1; margin: 0; padding: 12px; font-size: 15px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px);">Next ➡️</button>
+    </div>
     <br>
     <button id="hint-btn">Need a Hint?</button>
     <div id="hint-drawer" class="hint-box">
