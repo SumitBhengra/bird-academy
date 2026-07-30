@@ -42,6 +42,20 @@ function playWrongSound() {
   oscillator.start(audioCtx.currentTime);
   oscillator.stop(audioCtx.currentTime + 0.2);
 }
+let currentBirdAudio = null;
+const birdCallBtn = document.getElementById("bird-call-btn");
+
+// Function to stop any active audio playback
+function stopBirdCall() {
+  if (currentBirdAudio) {
+    currentBirdAudio.pause();
+    currentBirdAudio.currentTime = 0;
+    currentBirdAudio = null;
+  }
+  if (birdCallBtn) {
+    birdCallBtn.innerText = "🔊 Listen to Bird Call";
+  }
+}
 
 // ==========================================
 // 1. QUIZ DATA
@@ -382,6 +396,22 @@ const birdQuizData = [
     correctAnswer: "Curlew",
     hint: "It is well known for its haunting, bubbling whistle call across coastal fields.",
     hintImage: ""
+  },
+  {
+    question: "Listen to the call! Which bird species produces this distinct vocalization?",
+    options: ["Northern Cardinal", "Peregrine Falcon", "Cuckoo", "Barn Owl"],
+    correctAnswer: "Northern Cardinal",
+    hint: "Both male and female cardinals sing clear, whistled songs.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Bird_singing.ogg"
+  },
+  {
+    question: "Listen to this nocturnal call! Which bird of prey is known for this unique face and screech?",
+    options: ["Barn Owl", "Snowy Owl", "Eagle", "Hawk"],
+    correctAnswer: "Barn Owl",
+    hint: "It has a distinct heart-shaped face.",
+    hintImage: "",
+    audioUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Costa_Rican_Pygmy_Owl_%28Glaucidium_costaricanum%29_call.ogg"
   }
 ];
 
@@ -559,12 +589,22 @@ function renderQuiz() {
   hintDrawer.classList.remove("visible");
   clearInterval(quizTimerInterval);
 
+  stopBirdCall();
+  
   let currentData = activeQuizData[gameState.currentQuestionIndex];
   questionText.innerText = currentData.question;
   hintText.innerText = currentData.hint;
 
   hudScore.innerText = `Score: ${gameState.score}`;
 
+  // Handle Audio Button Visibility & Click Event
+  if (currentData.audioUrl && currentData.audioUrl !== "") {
+    birdCallBtn.style.display = "inline-block";
+    birdCallBtn.onclick = () => playBirdCall(currentData.audioUrl);
+  } else {
+    birdCallBtn.style.display = "none";
+  }
+  
   currentData.options.forEach(option => {
     const button = document.createElement("button");
     button.innerText = option;
@@ -575,6 +615,23 @@ function renderQuiz() {
   if (currentQuizMode === "speed") {
     startSpeedQuizTimer();
   }
+}
+// Function to handle playing and pausing bird calls
+function playBirdCall(url) {
+  if (currentBirdAudio && !currentBirdAudio.paused) {
+    stopBirdCall();
+    return;
+  }
+
+  stopBirdCall(); // Clean reset
+  currentBirdAudio = new Audio(url);
+  birdCallBtn.innerText = "⏸️ Pause Bird Call";
+
+  currentBirdAudio.play().catch(e => console.log("Audio play blocked:", e));
+
+  currentBirdAudio.onended = () => {
+    birdCallBtn.innerText = "🔊 Listen to Bird Call";
+  };
 }
 
 hintBtn.addEventListener("click", () => {
@@ -636,7 +693,8 @@ function handleQuizTimeOut() {
 
 function handleAnswerSubmit(selectedOption, correctAnswer, clickedButton) {
   clearInterval(quizTimerInterval);
-
+  stopBirdCall(); // Stop bird sound when answer chosen
+  
   const allButtons = optionsContainer.querySelectorAll("button");
   allButtons.forEach(btn => btn.disabled = true);
 
@@ -782,6 +840,7 @@ document.getElementById("restart-btn").addEventListener("click", () => {
 // ==========================================
 function returnToDashboard() {
   playPopSound();
+  stopBirdCall(); // Stop audio when returning home
   
   clearInterval(birdMoverInterval);
   clearInterval(timerInterval);
