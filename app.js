@@ -560,6 +560,10 @@ const exitGameOver = document.getElementById("exit-gameover");
 const quizCompleteScreen = document.getElementById("quiz-complete-screen");
 const btnStartGameAfterQuiz = document.getElementById("btn-start-game-after-quiz");
 
+const quizNavContainer = document.getElementById("quiz-nav-container");
+const prevBtn = document.getElementById("prev-btn");
+const nextBtn = document.getElementById("next-btn");
+
 // ==========================================
 // 4. ROUTING & MENU LOGIC
 // ==========================================
@@ -608,9 +612,11 @@ function startQuizWithMode(mode) {
   if (currentQuizMode === "speed") {
     timerContainerWrapper.style.display = "block";
     questionTimer.style.display = "inline";
+    if (quizNavContainer) quizNavContainer.style.display = "none"; // 👈 Hide Nav in Speed Mode
   } else {
     timerContainerWrapper.style.display = "none";
     questionTimer.style.display = "none";
+    if (quizNavContainer) quizNavContainer.style.display = "flex"; // 👈 Show Nav in Classic Mode
   }
 
   renderQuiz();
@@ -675,6 +681,20 @@ function renderQuiz() {
 
   hudScore.innerText = `Score: ${gameState.score}`;
 
+  // Update Previous / Next button controls
+  if (prevBtn) {
+    prevBtn.disabled = gameState.currentQuestionIndex === 0;
+    prevBtn.style.opacity = gameState.currentQuestionIndex === 0 ? "0.4" : "1";
+    prevBtn.style.cursor = gameState.currentQuestionIndex === 0 ? "not-allowed" : "pointer";
+  }
+
+  if (nextBtn) {
+    if (gameState.currentQuestionIndex === activeQuizData.length - 1) {
+      nextBtn.innerText = "Finish 🏁";
+    } else {
+      nextBtn.innerText = "Next ➡️";
+    }
+  }
   // Handle Audio Button Visibility & Click Event
   if (currentData.audioUrl && currentData.audioUrl !== "") {
     birdCallBtn.style.display = "inline-block";
@@ -955,6 +975,35 @@ exitGameOver.addEventListener("click", () => {
   gameOverScreen.classList.remove("active");
   loginScreen.classList.add("active");
 });
+
+// 👇 PASTE PREV & NEXT LISTENERS HERE 👇
+if (prevBtn) {
+  prevBtn.addEventListener("click", () => {
+    if (gameState.currentQuestionIndex > 0) {
+      playPopSound();
+      stopBirdCall();
+      clearInterval(quizTimerInterval);
+      gameState.currentQuestionIndex--;
+      renderQuiz();
+    }
+  });
+}
+
+if (nextBtn) {
+  nextBtn.addEventListener("click", () => {
+    playPopSound();
+    stopBirdCall();
+    clearInterval(quizTimerInterval);
+    
+    if (gameState.currentQuestionIndex < activeQuizData.length - 1) {
+      gameState.currentQuestionIndex++;
+      renderQuiz();
+    } else {
+      // Last question reached - finish quiz
+      proceedToNextQuestion();
+    }
+  });
+}
 
 function resetAllData() {
   gameState.currentQuestionIndex = 0;
