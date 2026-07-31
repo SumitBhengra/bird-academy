@@ -499,7 +499,8 @@ birdQuizData.push(...audioBirdQuestions);
 let gameState = {
   playerName: "",
   currentQuestionIndex: 0,
-  score: 0
+  score: 0,
+  correctCount: 0
 };
 
 let gameScore = 0;
@@ -602,6 +603,7 @@ function startQuizWithMode(mode) {
   streakCount = 0;
   scoreMultiplier = 1;
   gameState.score = 0;
+  gameState.correctCount = 0;
   gameState.currentQuestionIndex = 0;
 
   activeQuizData = shuffleArray(birdQuizData)
@@ -798,6 +800,7 @@ function handleAnswerSubmit(selectedOption, correctAnswer, clickedButton) {
 
   if (selectedOption === correctAnswer) {
     playPopSound(); 
+    gameState.correctCount++;
     
     streakCount++;
     if (streakCount >= 5) scoreMultiplier = 3;
@@ -830,19 +833,24 @@ function handleAnswerSubmit(selectedOption, correctAnswer, clickedButton) {
   }, 1200);
 }
 
+// --- Replace proceedToNextQuestion() in Section 5 ---
 function proceedToNextQuestion() {
   gameState.currentQuestionIndex++;
   
-  if (gameState.currentQuestionIndex < birdQuizData.length) {
+  // Use activeQuizData.length instead of birdQuizData.length
+  if (gameState.currentQuestionIndex < activeQuizData.length) {
     renderQuiz(); 
   } else {
     clearInterval(quizTimerInterval);
 
-    document.getElementById("quiz-score-display").innerText = gameState.score;
+    // Displays total points scored and total correct questions
+    document.getElementById("quiz-score-display").innerText = `${gameState.score} (${gameState.correctCount} correct)`;
     document.getElementById("quiz-total-display").innerText = activeQuizData.length;
 
     const encouragementDisplay = document.getElementById("quiz-encouragement-text");
-    const scorePercentage = gameState.score / activeQuizData.length;
+    
+    // Calculate percentage based on actual correct answers, not points
+    const scorePercentage = gameState.correctCount / activeQuizData.length;
     
     if (scorePercentage === 1) {
       encouragementDisplay.innerText = "Flawless victory! You are a true bird expert! 🦉";
@@ -869,28 +877,42 @@ function updateMultiplierBadge() {
 // ==========================================
 // 6. THE MINI-GAME ENGINE
 // ==========================================
+const birdTarget = document.getElementById("bird-target");
+
+// Move repositionBird to the outer scope so both startMiniGame and the click listener can use it
+function repositionBird() {
+  const maxX = window.innerWidth - 90;
+  const maxY = window.innerHeight - 100;
+  const minTop = 180;
+  
+  const x = Math.max(20, Math.floor(Math.random() * maxX));
+  const y = Math.floor(Math.random() * (maxY - minTop)) + minTop;
+  
+  birdTarget.style.left = `${x}px`;
+  birdTarget.style.top = `${y}px`;
+}
+
+// Attach event listener ONCE at script startup (outside startMiniGame)
+birdTarget.addEventListener("pointerdown", () => {
+  if (timeLeft > 0) {
+    playPopSound();
+    gameScore++;
+    document.getElementById("game-score").innerText = gameScore;
+    repositionBird();
+  }
+});
+
 function startMiniGame() {
   gameScore = 0;
   timeLeft = 15;
   
-  const birdTarget = document.getElementById("bird-target");
   const scoreDisplay = document.getElementById("game-score");
   const timeDisplay = document.getElementById("time-display");
   
   scoreDisplay.innerText = gameScore;
   timeDisplay.innerText = timeLeft;
 
-  function repositionBird() {
-    const maxX = window.innerWidth - 90;
-    const maxY = window.innerHeight - 100;
-    const minTop = 180;
-    
-    const x = Math.max(20, Math.floor(Math.random() * maxX));
-    const y = Math.floor(Math.random() * (maxY - minTop)) + minTop;
-    
-    birdTarget.style.left = `${x}px`;
-    birdTarget.style.top = `${y}px`;
-  }
+  repositionBird(); // Position bird immediately on start
 
   birdMoverInterval = setInterval(repositionBird, 800);
 
@@ -902,13 +924,6 @@ function startMiniGame() {
       endGame();
     }
   }, 1000);
-
-  birdTarget.addEventListener("pointerdown", () => {
-    playPopSound();
-    gameScore++;
-    scoreDisplay.innerText = gameScore;
-    repositionBird();
-  });
 }
 
 function endGame() {
@@ -932,6 +947,7 @@ document.getElementById("restart-btn").addEventListener("click", () => {
   gameOverScreen.classList.remove("active");
   welcomeScreen.classList.add("active");
 });
+
 
 // ==========================================
 // 7. NAVIGATION & HELPERS
