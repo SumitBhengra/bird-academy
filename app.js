@@ -515,6 +515,46 @@ let streakCount = 0;
 let scoreMultiplier = 1;
 
 // ==========================================
+// LOCAL STORAGE & HIGH SCORE HELPERS
+// ==========================================
+function getQuizHighScore() {
+  try {
+    return parseInt(localStorage.getItem("birdQuizHighScore")) || 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+function getGameHighScore() {
+  try {
+    return parseInt(localStorage.getItem("birdGameHighScore")) || 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
+function updateDashboardHighScores() {
+  const quizHigh = getQuizHighScore();
+  const gameHigh = getGameHighScore();
+
+  let hsContainer = document.getElementById("dashboard-high-scores");
+  if (!hsContainer) {
+    hsContainer = document.createElement("div");
+    hsContainer.id = "dashboard-high-scores";
+    hsContainer.style.cssText = "margin: 10px 0 20px 0; font-size: 15px; color: #facc15; font-weight: 600; background: rgba(0,0,0,0.25); padding: 10px 18px; border-radius: 20px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2);";
+    
+    const btnChooseQuiz = document.getElementById("btn-choose-quiz");
+    if (welcomeScreen && btnChooseQuiz) {
+      welcomeScreen.insertBefore(hsContainer, btnChooseQuiz);
+    }
+  }
+  
+  if (hsContainer) {
+    hsContainer.innerHTML = `🏆 Best Quiz: <strong>${quizHigh} pts</strong> | Best Taps: <strong>${gameHigh} birds</strong>`;
+  }
+}
+
+// ==========================================
 // 3. UI CONNECTORS
 // ==========================================
 const loginScreen = document.getElementById("login-screen");
@@ -574,6 +614,7 @@ startGameBtn.addEventListener("click", () => {
   
   playPopSound(); 
   welcomeText.innerText = `Welcome, ${gameState.playerName}!`;
+  updateDashboardHighScores();
   
   loginScreen.classList.remove("active");
   welcomeScreen.classList.add("active");
@@ -833,31 +874,50 @@ function handleAnswerSubmit(selectedOption, correctAnswer, clickedButton) {
   }, 1200);
 }
 
-// --- Replace proceedToNextQuestion() in Section 5 ---
 function proceedToNextQuestion() {
   gameState.currentQuestionIndex++;
   
-  // Use activeQuizData.length instead of birdQuizData.length
   if (gameState.currentQuestionIndex < activeQuizData.length) {
     renderQuiz(); 
   } else {
     clearInterval(quizTimerInterval);
 
-    // Displays total points scored and total correct questions
+    // Save & compare high score
+    const previousHigh = getQuizHighScore();
+    let isNewHigh = false;
+
+    if (gameState.score > previousHigh) {
+      try {
+        localStorage.setItem("birdQuizHighScore", gameState.score);
+        isNewHigh = true;
+      } catch (e) {
+        console.warn("localStorage not available");
+      }
+    }
+
+    const currentHigh = Math.max(previousHigh, gameState.score);
+
+    // Display scores
     document.getElementById("quiz-score-display").innerText = `${gameState.score} (${gameState.correctCount} correct)`;
     document.getElementById("quiz-total-display").innerText = activeQuizData.length;
 
     const encouragementDisplay = document.getElementById("quiz-encouragement-text");
-    
-    // Calculate percentage based on actual correct answers, not points
     const scorePercentage = gameState.correctCount / activeQuizData.length;
     
+    let baseText = "";
     if (scorePercentage === 1) {
-      encouragementDisplay.innerText = "Flawless victory! You are a true bird expert! 🦉";
+      baseText = "Flawless victory! You are a true bird expert! 🦉";
     } else if (scorePercentage >= 0.5) {
-      encouragementDisplay.innerText = "Great job! You really know your feathers! 🦅";
+      baseText = "Great job! You really know your feathers! 🦅";
     } else {
-      encouragementDisplay.innerText = "Good effort! Every expert starts as a beginner! 🐣";
+      baseText = "Good effort! Every expert starts as a beginner! 🐣";
+    }
+
+    // Highlight new high score
+    if (isNewHigh && gameState.score > 0) {
+      encouragementDisplay.innerHTML = `🌟 <strong>NEW HIGH SCORE: ${gameState.score} pts!</strong> 🌟<br>${baseText}`;
+    } else {
+      encouragementDisplay.innerHTML = `${baseText}<br><small style="font-size: 14px; opacity: 0.9;">🏆 Personal Best: ${currentHigh} pts</small>`;
     }
 
     quizScreen.classList.remove("active");
@@ -930,23 +990,48 @@ function endGame() {
   clearInterval(birdMoverInterval);
   clearInterval(timerInterval);
 
+  // Save & compare high score
+  const previousHigh = getGameHighScore();
+  let isNewHigh = false;
+
+  if (gameScore > previousHigh) {
+    try {
+      localStorage.setItem("birdGameHighScore", gameScore);
+      isNewHigh = true;
+    } catch (e) {
+      console.warn("localStorage not available");
+    }
+  }
+
+  const currentHigh = Math.max(previousHigh, gameScore);
+
   gameScreen.classList.remove("active");
   gameOverScreen.classList.add("active");
+  
   document.getElementById("final-score").innerText = gameScore;
   document.getElementById("display-player-name").innerText = gameState.playerName;
-}
 
-document.getElementById("restart-btn").addEventListener("click", () => {
-  playPopSound();
-  gameState.currentQuestionIndex = 0;
-  gameState.score = 0;
-  streakCount = 0;
-  scoreMultiplier = 1;
-  
-  welcomeText.innerText = `Welcome, ${gameState.playerName}!`;
-  gameOverScreen.classList.remove("active");
-  welcomeScreen.classList.add("active");
-});
+  // Display High Score Banner on Game Over Screen
+  let recordBanner = document.getElementById("game-record-banner");
+  if (!recordBanner) {
+    recordBanner = document.createElement("p");
+    recordBanner.id = "game-record-banner";
+    recordBanner.style.cssText = "color: #facc15; font-weight: 600; margin-top: 10px;";
+    
+    const restartBtn = document.getElementById("restart-btn");
+    if (gameOverScreen && restartBtn) {
+      gameOverScreen.insertBefore(recordBanner, restartBtn);
+    }
+  }
+
+  if (recordBanner) {
+    if (isNewHigh && gameScore > 0) {
+      recordBanner.innerHTML = `🎉 <strong>NEW PERSONAL BEST!</strong> 🎉`;
+    } else {
+      recordBanner.innerHTML = `🏆 Personal Best: <strong>${currentHigh} birds</strong>`;
+    }
+  }
+}
 
 
 // ==========================================
@@ -966,6 +1051,7 @@ function returnToDashboard() {
   scoreMultiplier = 1;
   
   welcomeText.innerText = `Welcome, ${gameState.playerName}!`;
+  updateDashboardHighScores();
   
   quizScreen.classList.remove("active");
   gameModeMenu.classList.remove("active");
