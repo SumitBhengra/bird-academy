@@ -669,6 +669,7 @@ btnPlayQuizAgain.addEventListener("click", () => {
   playPopSound();
   gameState.currentQuestionIndex = 0;
   gameState.score = 0;
+  gameState.correctCount = 0;
   streakCount = 0;
   scoreMultiplier = 1;
   updateMultiplierBadge();
