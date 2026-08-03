@@ -608,6 +608,22 @@ const nextBtn = document.getElementById("next-btn");
 
 const flashcardContainer = document.getElementById("flashcard-container");
 const birdImage = document.getElementById("bird-image");
+
+// --- Add in Section 3 (UI Connectors) ---
+questionText.addEventListener("click", () => {
+  let currentData = activeQuizData[gameState.currentQuestionIndex];
+  
+  // Toggle image if available for the current question
+  if (currentData && currentData.image && currentData.image !== "") {
+    playPopSound();
+    
+    if (flashcardContainer.style.display === "none" || flashcardContainer.style.display === "") {
+      flashcardContainer.style.display = "block";
+    } else {
+      flashcardContainer.style.display = "none";
+    }
+  }
+});
 // ==========================================
 // 4. ROUTING & MENU LOGIC
 // ==========================================
@@ -726,13 +742,18 @@ function renderQuiz() {
   questionText.innerText = currentData.question;
   hintText.innerText = currentData.hint;
 
+  flashcardContainer.style.display = "none";
+
   // 📸 Handle Flashcard Image
-  if (currentData.image && currentData.image !== "") {
-    birdImage.src = currentData.image;
-    flashcardContainer.style.display = "block";
-  } else {
-    flashcardContainer.style.display = "none";
-  }
+if (currentData.image && currentData.image !== "") {
+  birdImage.src = currentData.image;
+  questionText.style.cursor = "pointer";
+  questionText.title = "Click question to reveal photo!";
+} else {
+  birdImage.src = "";
+  questionText.style.cursor = "default";
+  questionText.title = "";
+}
 
   hudScore.innerText = `Score: ${gameState.score}`;
 
