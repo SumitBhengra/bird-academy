@@ -67,6 +67,7 @@ const birdQuizData = [
     correctAnswer: "Rainbow Lorikeet",
     hint: "It is famous for its multicolored plumage and lively personality.",
     hintImage: ""
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Trichoglossus_moluccanus_-_Sylvan_Heights_Bird_Park.jpg/640px-Trichoglossus_moluccanus_-_Sylvan_Heights_Bird_Park.jpg"
   },
   {
     question: "Which striking gamebird is famous for its unmistakable golden crest and bright red body?",
@@ -605,6 +606,8 @@ const quizNavContainer = document.getElementById("quiz-nav-container");
 const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 
+const flashcardContainer = document.getElementById("flashcard-container");
+const birdImage = document.getElementById("bird-image");
 // ==========================================
 // 4. ROUTING & MENU LOGIC
 // ==========================================
@@ -722,6 +725,14 @@ function renderQuiz() {
   let currentData = activeQuizData[gameState.currentQuestionIndex];
   questionText.innerText = currentData.question;
   hintText.innerText = currentData.hint;
+
+  // 📸 Handle Flashcard Image
+  if (currentData.image && currentData.image !== "") {
+    birdImage.src = currentData.image;
+    flashcardContainer.style.display = "block";
+  } else {
+    flashcardContainer.style.display = "none";
+  }
 
   hudScore.innerText = `Score: ${gameState.score}`;
 
