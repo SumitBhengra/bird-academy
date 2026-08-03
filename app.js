@@ -759,6 +759,7 @@ function renderQuiz() {
   }
 }
 // Function to handle playing and pausing bird calls
+// Function to handle playing and pausing bird calls
 function playBirdCall(url) {
   if (currentBirdAudio && !currentBirdAudio.paused) {
     stopBirdCall();
@@ -766,13 +767,25 @@ function playBirdCall(url) {
   }
 
   stopBirdCall(); // Clean reset
-  currentBirdAudio = new Audio(url);
-  birdCallBtn.innerText = "⏸️ Pause Bird Call";
 
-  currentBirdAudio.play().catch(e => console.log("Audio play blocked:", e));
+  currentBirdAudio = new Audio(url);
+
+  // Catch network or unsupported codec errors
+  currentBirdAudio.onerror = () => {
+    if (birdCallBtn) birdCallBtn.innerText = "❌ Audio Failed to Load";
+  };
+
+  currentBirdAudio.play()
+    .then(() => {
+      if (birdCallBtn) birdCallBtn.innerText = "⏸️ Pause Bird Call";
+    })
+    .catch(e => {
+      console.warn("Audio playback blocked or unsupported:", e);
+      if (birdCallBtn) birdCallBtn.innerText = "⚠️ Playback Blocked";
+    });
 
   currentBirdAudio.onended = () => {
-    birdCallBtn.innerText = "🔊 Listen to Bird Call";
+    if (birdCallBtn) birdCallBtn.innerText = "🔊 Listen to Bird Call";
   };
 }
 
