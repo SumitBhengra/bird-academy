@@ -66,7 +66,7 @@ const birdQuizData = [
     options: ["Golden Pheasant", "Rainbow Lorikeet", "Atlantic Puffin", "Hoopoe"],
     correctAnswer: "Rainbow Lorikeet",
     hint: "It is famous for its multicolored plumage and lively personality.",
-    hintImage: ""
+    hintImage: "",
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Trichoglossus_moluccanus_-_Sylvan_Heights_Bird_Park.jpg/640px-Trichoglossus_moluccanus_-_Sylvan_Heights_Bird_Park.jpg"
   },
   {
