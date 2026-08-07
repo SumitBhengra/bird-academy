@@ -67,7 +67,7 @@ const birdQuizData = [
     correctAnswer: "Rainbow Lorikeet",
     hint: "It is famous for its multicolored plumage and lively personality.",
     hintImage: "",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Trichoglossus_moluccanus_-_Sylvan_Heights_Bird_Park.jpg/640px-Trichoglossus_moluccanus_-_Sylvan_Heights_Bird_Park.jpg"
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Rainbow_lorikeet_%28Trichoglossus_moluccanus_moluccanus%29_Sydney.jpg/960px-Rainbow_lorikeet_%28Trichoglossus_moluccanus_moluccanus%29_Sydney.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
   },
   {
     question: "Which striking gamebird is famous for its unmistakable golden crest and bright red body?",
